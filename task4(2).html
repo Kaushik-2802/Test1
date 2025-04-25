@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Data</title>
+</head>
+<body>
+  <h1>Weather Details</h1>
+  
+  <label for="city">Enter City: </label>
+  <input type="text" id="city" placeholder="City name">
+  <button onclick="getWeather()">Get Weather</button>
+
+  <div id="weather-details">
+  </div>
+
+  <script>
+    const apiKey = 'a7904dc8957973f928efdfc19061e0bb';  
+    const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+
+    function getWeather() {
+      const city = document.getElementById('city').value;
+      const url = `${apiUrl}?q=${city}&appid=${apiKey}&units=metric`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.cod === 200) {
+            const weatherDetails = `
+              <table border="1">
+                <tr><th>City</th><td>${data.name}</td></tr>
+                <tr><th>Min Temp</th><td>${data.main.temp_min}°C</td></tr>
+                <tr><th>Max Temp</th><td>${data.main.temp_max}°C</td></tr>
+                <tr><th>Humidity</th><td>${data.main.humidity}%</td></tr>
+              </table>
+            `;
+            document.getElementById('weather-details').innerHTML = weatherDetails;
+          } else {
+            document.getElementById('weather-details').innerHTML = 'City not found. Please try again.';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching weather data:', error);
+        });
+    }
+  </script>
+</body>
+</html>
